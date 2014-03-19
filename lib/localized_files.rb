@@ -2,9 +2,9 @@
 require "localized_files/version"
 begin
   require "paperclip"
-  require "mongoid_paperclip"
-rescue LoadError
-  puts "Mongoid::Paperclip::LocalizedFiles requires that you install the Paperclip and the Mongoid::Paperclip gem."
+  require "mongoid-paperclip"
+rescue LoadError => e
+  puts "Mongoid::Paperclip::LocalizedFiles requires that you install the Paperclip and the Mongoid::Paperclip gem : #{e.message}"
   exit
 end
 module Mongoid
