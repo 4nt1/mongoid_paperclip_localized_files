@@ -16,15 +16,14 @@ And then execute:
 
 ## Usage
 
-Add "include Mongoid::Paperclip::LocalizedFiles" to your model.
-Define localized files with "has_mongoid_localized_file"
-Note that this will also include Mongoid::Paperclip to your model, you can then use 'has_mongoid_attached_file' for other files
-
     class User
       include Mongoid::Document
       include Mongoid::Paperclip::LocalizedFiles
 
       has_mongoid_localized_file :truc
+
+      # note that that including LocalizedFiles also include the usual Mongoid::Paperclip
+      # so you can use :
       has_mongoid_attached_file  :bla
     end
 
