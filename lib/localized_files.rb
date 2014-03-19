@@ -13,7 +13,7 @@ module Mongoid
       extend ActiveSupport::Concern
 
       included do
-
+        include Mongoid::Paperclip
         field :localized_files,     type: Hash,   default: {}
 
         after_find do |that|
@@ -72,10 +72,6 @@ module Mongoid
       end
 
       module ClassMethods
-
-        unless self.ancestors.include?(::Mongoid::Paperclip)
-          include ::Mongoid::Paperclip
-        end
         @@localized_file_fields = []
 
         def localized_file_fields
