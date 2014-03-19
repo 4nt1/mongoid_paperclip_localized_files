@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = LocalizedFiles::VERSION
   spec.authors       = ["4nt1"]
   spec.email         = ["antoinemary@hotmail.fr"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{LocalizedFiles allows you to store files in a model, related to a language.}
+  spec.description   = %q{LocalizedFiles enhance the possibility of the mongoid-paperclip gem. As you can localize a model string attributes, you can now localize files stored in your model.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
