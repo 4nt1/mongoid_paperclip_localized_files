@@ -8,7 +8,6 @@ LocalizedFiles enhance the possibility of the mongoid-paperclip gem. As you can 
 
 Add this line to your application's Gemfile:
 
-    gem "mongoid-paperclip", :require => "mongoid_paperclip"
     gem 'localized_files', git: 'https://github.com/4nt1/mongoid_paperclip_localized_files.git'
 
 And then execute:
