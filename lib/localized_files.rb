@@ -92,9 +92,6 @@ module Mongoid
               locale = I18n.locale
               define_mongoid_method(field, locale, options)
               self.send("#{field}_#{locale}=".to_sym, file)
-              # presence = self.send("#{field}_#{locale}").present?
-              # update_localized_files_hash(field, locale, presence)
-              # file
             else
               raise new TypeError("wrong argument type File (expected File)")
             end
@@ -105,8 +102,6 @@ module Mongoid
               if (locale.is_a?(Symbol) || locale.is_a?(String)) && (file.is_a?(File) || file.nil?)
                 define_mongoid_method(field, locale, options)
                 self.send("#{field}_#{locale}=".to_sym, file)
-                # presence = self.send("#{field}_#{locale}").present?
-                # update_localized_files_hash(field, locale, presence)
               else
                 klass = (locale.is_a?(Symbol) || locale.is_a?(String)) ? 'Symbol or String' : 'File'
                 raise new TypeError("wrong argument type File (expected #{klass})")
