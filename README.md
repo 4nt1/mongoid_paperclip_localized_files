@@ -1,20 +1,19 @@
 # LocalizedFiles
 
-TODO: Write a gem description
+LocalizedFiles allows you to store files in a model, related to a language.
+
+LocalizedFiles enhance the possibility of the mongoid-paperclip gem. As you can localize a model string attributes, you can now localize files stored in your model.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'TODO'
+    gem "mongoid-paperclip", :require => "mongoid_paperclip"
+    gem 'localized_files', git: 'https://github.com/4nt1/mongoid_paperclip_localized_files.git'
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install TODO
 
 ## Usage
 
