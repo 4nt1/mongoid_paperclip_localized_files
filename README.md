@@ -20,12 +20,45 @@ And then execute:
       include Mongoid::Document
       include Mongoid::Paperclip::LocalizedFiles
 
-      has_mongoid_localized_file :truc
+      has_mongoid_localized_file :some_file
 
       # note that that including LocalizedFiles also include the usual Mongoid::Paperclip
       # so you can use :
-      has_mongoid_attached_file  :bla
+      has_mongoid_attached_file  :some_other_file
     end
+
+    u = User.new
+    f = File.open('path_to_file')
+
+    I18n.locale
+    => :en
+
+    # simple affectation links the file instance to the current locale
+    u.some_file = f
+    => #<File:path_to_file>
+
+    # helper method to summarize files /languages links
+    u.localized_files
+    => {"some_file"=>[:en]}
+
+    # change locale to set it to another language
+    I18n.locale = :fr
+    => :fr
+    u.some_file = f
+    => #<File:path_to_file>
+    u.localized_files
+    => {"some_file"=>[:en, :fr]}
+
+    # set one or multiple file using a hash
+    u.some_file_translations= {de: f, it: f}
+    => {:de=>#<File:path_to_file>, :it=>#<File:path_to_file>}
+
+    # get specific file without changing locale
+    u.some_file(:en)
+    => #<Paperclip::Attachment:0x007fed5fbf75f8 @name=:some_file_en ... >
+
+
+
 
 ## Contributing
 
