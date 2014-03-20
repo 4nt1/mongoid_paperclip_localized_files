@@ -37,7 +37,7 @@ And then execute:
     u.some_file = f
     => #<File:path_to_file>
 
-    # helper method to summarize files /languages links
+    # helper method summarizes files /languages links
     u.localized_files
     => {"some_file"=>[:en]}
 
@@ -49,16 +49,23 @@ And then execute:
     u.localized_files
     => {"some_file"=>[:en, :fr]}
 
-    # set one or multiple file using a hash
-    u.some_file_translations= {de: f, it: f}
-    => {:de=>#<File:path_to_file>, :it=>#<File:path_to_file>}
+    # or use direct setter
+    u.some_file_es = f
+    => #<File:path_to_file>
+    u.localized_files
+    => {"some_file"=>[:en, :fr, :es]}
+
+    # set one or multiple file using a hash, you're not limited to locales symbol
+    u.some_file_translations= {de: f, i_do_not_need: f}
+    => {:de=>#<File:path_to_file>, :i_do_not_need=>#<File:path_to_file>}
 
     # get specific file without changing locale
     u.some_file(:en)
     => #<Paperclip::Attachment:0x007fed5fbf75f8 @name=:some_file_en ... >
 
-
-
+    # or use direct getter
+    u.some_file_i_do_not_need
+    => #<Paperclip::Attachment:0x007fed5bcea2c0 @name=:some_file_my_super ...>
 
 ## Contributing
 
