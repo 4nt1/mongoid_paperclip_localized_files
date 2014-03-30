@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["antoinemary@hotmail.fr"]
   spec.summary       = %q{LocalizedFiles allows you to store files in a model, related to a language.}
   spec.description   = %q{LocalizedFiles enhance the possibility of the mongoid-paperclip gem. As you can localize a model string attributes, you can now localize files stored in your model.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/4nt1/mongoid_paperclip_localized_files"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -22,4 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_dependency "paperclip", "3.5.2"
   spec.add_dependency "mongoid-paperclip"
+  spec.add_development_dependency "rspec"
+
 end
