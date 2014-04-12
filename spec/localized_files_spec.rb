@@ -2,13 +2,14 @@ require 'spec_helper'
 require 'user'
 require 'child'
 
-[:fr].each do |locale|
+@locales = [:fr, :en, :de]
+@locales.each do |locale|
 
   describe '#loc_file' do
 
     before :each do
-      @user         = User.new
-      @file = File.open('README.md')
+      @user       = User.new
+      @file       = File.open('README.md')
       I18n.locale = locale
     end
 
@@ -21,12 +22,6 @@ require 'child'
       @user.loc_file = @file
       @user.loc_file.should be_an_instance_of Paperclip::Attachment
     end
-
-  end
-
-  describe "#loc_file_translations=" do
-
-    it
 
   end
 
@@ -62,4 +57,34 @@ require 'child'
     end
 
   end
+end
+
+describe "#loc_file_translations" do
+  before :each do
+    @locales = [:fr, :en, :de]
+    @user       = User.new
+    @locales.each do |locale|
+      I18n.locale = locale
+      @file       = File.open('README.md')
+      @user.loc_file = @file
+    end
+  end
+
+  it 'Returns all locales' do
+    (@user.loc_file_translations).should eql @locales
+  end
+
+end
+
+describe "#loc_file_translations=" do
+  before :each do
+    @user       = User.new
+    @file       = File.open('README.md')
+  end
+
+  it 'Should set file in all locales' do
+    @user.loc_file_translations = {de: @file, fr: @file, en: @file}
+    ([:de, :fr, :en].map{|l| @user.send("loc_file_#{l}").present?}.all?).should eql true
+  end
+
 end
