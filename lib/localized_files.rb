@@ -30,9 +30,12 @@ module Mongoid
         end
 
         def method_missing(meth, *args, &block)
+          setter = meth.to_s.last == '=' ? true : false
           arr = "#{meth}".gsub('=', '').split('_').map(&:to_sym)
+          locale = arr.pop
+          restored_method = arr*('_')
           if self.class.localized_file_fields.include?(arr[0])
-            define_mongoid_method(arr[0], arr[1])
+            define_mongoid_method(restored_method, locale)
             self.send(meth, *args)
           else
             super(meth, *args, &block)

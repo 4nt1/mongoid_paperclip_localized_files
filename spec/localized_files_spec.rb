@@ -57,6 +57,7 @@ require 'child'
     end
 
   end
+
 end
 
 describe "#loc_file_translations" do
