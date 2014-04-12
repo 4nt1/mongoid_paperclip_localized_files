@@ -30,7 +30,6 @@ module Mongoid
         end
 
         def method_missing(meth, *args, &block)
-          debugger
           setter = meth.to_s.last == '=' ? true : false
           arr = "#{meth}".gsub('=', '').split('_').map(&:to_sym)
           locale = arr.pop

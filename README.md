@@ -16,6 +16,7 @@ And then execute:
 
 ## Usage
 
+```rb
     class User
       include Mongoid::Document
       include Mongoid::Paperclip::LocalizedFiles
@@ -66,7 +67,7 @@ And then execute:
     # or use direct getter
     u.some_file_i_do_not_need
     => #<Paperclip::Attachment:0x007fed5bcea2c0 @name=:some_file_my_super ...>
-
+```
 ## Contributing
 
 1. Fork it
