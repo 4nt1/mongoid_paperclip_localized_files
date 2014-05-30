@@ -34,6 +34,7 @@ require 'child'
     end
 
     it 'An attachment is present' do
+      debugger
       @user.loc_file_translations = {locale=> @file}
       (@user.loc_file(locale).present?).should eql true
     end
@@ -60,32 +61,32 @@ require 'child'
 
 end
 
-describe "#loc_file_translations" do
-  before :each do
-    @locales = [:fr, :en, :de]
-    @user       = User.new
-    @locales.each do |locale|
-      I18n.locale = locale
-      @file       = File.open('README.md')
-      @user.loc_file = @file
-    end
-  end
+# describe "#loc_file_translations" do
+#   before :each do
+#     @locales = [:fr, :en, :de]
+#     @user       = User.new
+#     @locales.each do |locale|
+#       I18n.locale = locale
+#       @file       = File.open('README.md')
+#       @user.loc_file = @file
+#     end
+#   end
 
-  it 'Returns all locales' do
-    (@user.loc_file_translations).should eql @locales
-  end
+#   it 'Returns all locales' do
+#     (@user.loc_file_translations).should eql @locales
+#   end
 
-end
+# end
 
-describe "#loc_file_translations=" do
-  before :each do
-    @user       = User.new
-    @file       = File.open('README.md')
-  end
+# describe "#loc_file_translations=" do
+#   before :each do
+#     @user       = User.new
+#     @file       = File.open('README.md')
+#   end
 
-  it 'Should set file in all locales' do
-    @user.loc_file_translations = {de: @file, fr: @file, en: @file}
-    ([:de, :fr, :en].map{|l| @user.send("loc_file_#{l}").present?}.all?).should eql true
-  end
+#   it 'Should set file in all locales' do
+#     @user.loc_file_translations = {de: @file, fr: @file, en: @file}
+#     ([:de, :fr, :en].map{|l| @user.send("loc_file_#{l}").present?}.all?).should eql true
+#   end
 
-end
+# end

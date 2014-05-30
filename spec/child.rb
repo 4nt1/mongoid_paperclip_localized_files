@@ -1,8 +1,8 @@
 class Child
   include Mongoid::Document
-  include Mongoid::Paperclip::LocalizedFiles
+  include Mongoid::Paperclip
 
   embedded_in                :user
-  has_mongoid_localized_file :id_pic
+  has_mongoid_attached_file :id_pic, localize: true
 
 end

@@ -7,9 +7,9 @@ rescue LoadError => e
   puts "Mongoid::Paperclip::LocalizedFiles requires that you install the Paperclip and the Mongoid::Paperclip gem : #{e.message}"
   exit
 end
-module Mongoid
-  module Paperclip
-    module LocalizedFiles
+Mongoid.module_eval do
+  Paperclip.module_eval do
+    # module LocalizedFiles
       extend ActiveSupport::Concern
 
       included do
@@ -18,7 +18,6 @@ module Mongoid
         end
 
         @localized_file_fields = []
-        include Mongoid::Paperclip
         field :localized_files,     type: Hash,   default: {}
 
         after_find do |that|
@@ -30,7 +29,6 @@ module Mongoid
         end
 
         def method_missing(meth, *args, &block)
-          setter = meth.to_s.last == '=' ? true : false
           arr = "#{meth}".gsub('=', '').split('_').map(&:to_sym)
           locale = arr.pop
           restored_method = (arr*('_')).to_sym
@@ -45,7 +43,7 @@ module Mongoid
 
         def define_mongoid_method(field, locale, options={})
           self.class_eval do
-            has_mongoid_attached_file("#{field}_#{locale}".to_sym, options)
+            has_mongoid_attached_file("#{field}_#{locale}".to_sym)
             alias_method "#{field}_#{locale}_private=".to_sym, "#{field}_#{locale}=".to_sym
             alias_method "#{field}_#{locale}_private".to_sym, "#{field}_#{locale}".to_sym
 
@@ -60,7 +58,7 @@ module Mongoid
               self.send("#{field}_#{locale}_private".to_sym)
             end
           end
-          self.class.has_mongoid_attached_file("#{field}_#{locale}".to_sym, options)
+          # self.class.has_mongoid_attached_file("#{field}_#{locale}".to_sym, options)
 
         end
 
@@ -83,7 +81,8 @@ module Mongoid
 
       module ClassMethods
 
-        def has_mongoid_localized_file(field, options = {})
+        def has_mongoid_attached_file(field, options = {})
+          if options.try(:[], :localize) == true
           localized_file_fields.push(field) if !localized_file_fields.include?(field)
 
           define_method(field) do |locale=I18n.locale|
@@ -124,10 +123,13 @@ module Mongoid
           define_method("#{field}_translations") do
             self.localized_files["#{field}"]
           end
+        else
+          super
+        end
 
         end
       end
-    end
+    # end
 
   end
 end

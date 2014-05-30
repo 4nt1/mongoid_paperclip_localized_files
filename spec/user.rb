@@ -1,8 +1,8 @@
 class User
   include Mongoid::Document
-  include Mongoid::Paperclip::LocalizedFiles
+  include Mongoid::Paperclip
 
-  has_mongoid_localized_file :loc_file
+  has_mongoid_attached_file  :loc_file, localize: true
   has_mongoid_attached_file  :not_loc_file
 
   embeds_many                 :children
