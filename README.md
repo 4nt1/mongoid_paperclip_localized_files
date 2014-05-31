@@ -19,12 +19,11 @@ And then execute:
 ```rb
     class User
       include Mongoid::Document
+      include Mongoid::Paperclip
       include LocalizedFiles
 
       has_mongoid_attached_file :some_file,     localize: true
 
-      # note that that including LocalizedFiles also include the usual Mongoid::Paperclip
-      # so you can use :
       has_mongoid_attached_file  :some_other_file
     end
 
