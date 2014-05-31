@@ -10,7 +10,7 @@ end
 module LocalizedFiles
   extend ActiveSupport::Concern
   included do
-    class << self
+    self.class_eval do
       attr_accessor :localized_file_fields
     end
 
@@ -22,19 +22,6 @@ module LocalizedFiles
         locales.each do |locale|
           define_mongoid_method(field, locale)
         end
-      end
-    end
-
-    def method_missing(meth, *args, &block)
-      puts 'in method missing'.red
-      arr = "#{meth}".gsub('=', '').split('_').map(&:to_sym)
-      locale = arr.pop
-      restored_method = (arr*('_')).to_sym
-      if self.class.localized_file_fields.include?(restored_method)
-        define_mongoid_method(restored_method, locale)
-        self.send(meth, *args)
-      else
-        super(meth, *args, &block)
       end
     end
 
@@ -54,10 +41,10 @@ module LocalizedFiles
   Mongoid::Paperclip.module_eval do
 
     def define_mongoid_method(field, locale, options={})
-      # we're in the instance of User
+      # we're in the instance
       # define the method on the class if not defined
       self.class_eval do
-        # we're in the User class
+        # we're in the instance.class class
         has_mongoid_attached_file_private("#{field}_#{locale}".to_sym)
       end if !self.respond_to?("#{field}_#{locale}".to_sym)
     end
@@ -67,13 +54,13 @@ module LocalizedFiles
       alias_method :has_mongoid_attached_file_private, :has_mongoid_attached_file
 
       def has_mongoid_attached_file(field, options={})
-        puts "in User.has_mongoid_attached_file".blue
-        # We just pass here once, when the User class is loaded
+
+        # We just pass here once, when the instance.class class is loaded
         # Here comes the new option !
         if options.try(:[], :localize) == true
           localized_file_fields.push(field) if !localized_file_fields.include?(field)
           self.class_eval do
-            # we are in the User class
+            # we are in the instance.class class
 
             # define getter
             define_method(field) do |locale=I18n.locale|
