@@ -4,19 +4,17 @@ begin
   require "paperclip"
   require "mongoid_paperclip"
 rescue LoadError => e
-  puts "Mongoid::Paperclip::LocalizedFiles requires that you install the Paperclip and the Mongoid::Paperclip gem : #{e.message}"
+  puts "LocalizedFiles requires that you install the Paperclip and the Mongoid::Paperclip gem : #{e.message}"
   exit
 end
 module LocalizedFiles
   extend ActiveSupport::Concern
   included do
-    self.class_eval do
-      attr_accessor :localized_file_fields
-    end
 
     @localized_file_fields = []
     field :localized_files,     type: Hash,   default: {}
 
+    # define method on instantiation
     after_find do |that|
       that.localized_files.each do |field, locales|
         locales.each do |locale|
@@ -39,6 +37,7 @@ module LocalizedFiles
   end
 
   Mongoid::Paperclip.module_eval do
+    # we're in Mongoid::Paperclip module
 
     def define_mongoid_method(field, locale, options={})
       # we're in the instance
@@ -50,6 +49,9 @@ module LocalizedFiles
     end
 
     Mongoid::Paperclip::ClassMethods.module_eval do
+
+      # add accessor on the class
+      attr_accessor :localized_file_fields
       # rename the :has_mongoid _attached_file method sur we can add features
       alias_method :has_mongoid_attached_file_private, :has_mongoid_attached_file
 
