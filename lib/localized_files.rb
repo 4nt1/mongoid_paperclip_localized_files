@@ -65,7 +65,7 @@ module LocalizedFiles
             # we are in the instance.class class
 
             # define getter
-            define_method(field do |locale=I18n.locale|
+            define_method(field) do |locale=I18n.locale|
               define_mongoid_method(field, locale, options)
               self.send("#{field}_#{locale}".to_sym)
             end
