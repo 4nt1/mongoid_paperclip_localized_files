@@ -44,7 +44,7 @@ module LocalizedFiles
       # define the method on the class if not defined
       self.class_eval do
         # we're in the instance.class class
-        has_mongoid_attached_file_private("#{field}_#{locale}".to_sym)
+        has_mongoid_attached_file_original("#{field}_#{locale}".to_sym)
       end if !self.respond_to?("#{field}_#{locale}".to_sym)
     end
 
@@ -53,7 +53,7 @@ module LocalizedFiles
       # add accessor on the class
       attr_accessor :localized_file_fields
       # rename the :has_mongoid _attached_file method sur we can add features
-      alias_method :has_mongoid_attached_file_private, :has_mongoid_attached_file
+      alias_method :has_mongoid_attached_file_original, :has_mongoid_attached_file
 
       def has_mongoid_attached_file(field, options={})
 
@@ -65,7 +65,7 @@ module LocalizedFiles
             # we are in the instance.class class
 
             # define getter
-            define_method(field) do |locale=I18n.locale|
+            define_method(field do |locale=I18n.locale|
               define_mongoid_method(field, locale, options)
               self.send("#{field}_#{locale}".to_sym)
             end
@@ -110,7 +110,7 @@ module LocalizedFiles
           end
         else
           options.delete(:localize)
-          has_mongoid_attached_file_private(field, options)
+          has_mongoid_attached_file_original(field, options)
         end
       end
     end
