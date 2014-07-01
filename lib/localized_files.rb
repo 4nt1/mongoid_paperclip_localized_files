@@ -73,31 +73,20 @@ module LocalizedFiles
             # define setter
             define_method("#{field}=") do |file|
               locale = I18n.locale
-              if file.is_a?(File) || file.nil?
-                define_mongoid_method(field, locale, options)
-                self.send("#{field}_#{locale}=".to_sym, file)
-                presence = self.send("#{field}_#{locale}").present?
-                update_localized_files_hash(field, locale, presence)
-                file
-              else
-                raise new TypeError("wrong argument type #{file.class} (expected File)")
-              end
+              define_mongoid_method(field, locale, options)
+              self.send("#{field}_#{locale}=".to_sym, file)
+              presence = self.send("#{field}_#{locale}").present?
+              update_localized_files_hash(field, locale, presence)
+              file
             end
 
             # define setter helper
             define_method("#{field}_translations=") do |hashed_files|
               hashed_files.each do |locale, file|
-                if (locale.is_a?(Symbol) || locale.is_a?(String)) && (file.is_a?(File) || file.nil?)
-                  define_mongoid_method(field, locale, options)
-                  self.send("#{field}_#{locale}=".to_sym, file)
-                  presence = self.send("#{field}_#{locale}").present?
-                  update_localized_files_hash(field, locale, presence)
-                  file
-                elsif file.is_a?(File) || file.nil?
-                  raise new TypeError("wrong argument type #{locale.klass} (expected Symbol or String)")
-                elsif locale.is_a?(Symbol) || locale.is_a?(String)
-                  raise new TypeError("wrong argument type #{file.klass} (expected File)")
-                end
+                define_mongoid_method(field, locale, options)
+                self.send("#{field}_#{locale}=".to_sym, file)
+                presence = self.send("#{field}_#{locale}").present?
+                update_localized_files_hash(field, locale, presence)
                 self.localized_files
               end
             end
