@@ -35,7 +35,9 @@ module LocalizedFiles
 
       def has_mongoid_attached_file(field, options={})
 
-        self.localized_file_fields = self.superclass.localized_file_fields if self.superclass.localized_file_fields.present? && self.localized_file_fields.nil?
+        if self.localized_file_fields.nil?
+          self.localized_file_fields = self.superclass.localized_file_fields if self.superclass.localized_file_fields.present?
+        end
 
         # We just pass here once, when the instance.class class is loaded
         # Here comes the new option !
