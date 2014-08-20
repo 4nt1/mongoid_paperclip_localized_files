@@ -10,30 +10,8 @@ end
 module LocalizedFiles
   extend ActiveSupport::Concern
   included do
-
     @localized_file_fields = []
     field :localized_files,     type: Hash,   default: {}
-
-    # define method on instantiation
-    after_find do |that|
-      that.localized_files.each do |field, locales|
-        locales.each do |locale|
-          define_mongoid_method(field, locale)
-        end
-      end
-    end
-
-    def update_localized_files_hash(field, locale, presence)
-      locale = locale.to_sym
-      self.localized_files["#{field}"] = [] if self.localized_files["#{field}"].blank?
-      # adding a file
-      if presence
-        self.localized_files["#{field}"].push(locale) if !self.localized_files["#{field}"].include?(locale)
-      # deleting a file
-      elsif !presence
-        self.localized_files["#{field}"].delete(locale) if self.localized_files["#{field}"].include?(locale)
-      end
-    end
   end
 
   Mongoid::Paperclip.module_eval do
@@ -57,12 +35,37 @@ module LocalizedFiles
 
       def has_mongoid_attached_file(field, options={})
 
+        self.localized_file_fields = self.superclass.localized_file_fields if self.localized_file_fields.nil? && self.superclass.localized_file_fields.present?
+
         # We just pass here once, when the instance.class class is loaded
         # Here comes the new option !
         if options.try(:[], :localize) == true
           localized_file_fields.push(field) if !localized_file_fields.include?(field)
           self.class_eval do
             # we are in the instance.class class
+
+            # define method on instantiation
+            after_find do |that|
+              that.localized_files.each do |field, locales|
+                locales.each do |locale|
+                  define_mongoid_method(field, locale)
+                end
+              end
+            end
+
+            def update_localized_files_hash(field, locale, presence)
+              locale = locale.to_sym
+              self.localized_files["#{field}"] = [] if self.localized_files["#{field}"].blank?
+              # adding a file
+              if presence
+                self.localized_files["#{field}"].push(locale) if !self.localized_files["#{field}"].include?(locale)
+              # deleting a file
+              elsif !presence
+                self.localized_files["#{field}"].delete(locale) if self.localized_files["#{field}"].include?(locale)
+              end
+            end
+
+
 
             # define getter
             define_method(field) do |locale=I18n.locale|
