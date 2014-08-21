@@ -36,7 +36,7 @@ module LocalizedFiles
       def has_mongoid_attached_file(field, options={})
 
         if self.localized_file_fields.nil?
-          self.localized_file_fields = self.superclass.localized_file_fields if self.superclass.instance_methods(false).include?(:localized_file_fields) && self.superclass.localized_file_fields.present?
+          self.localized_file_fields = self.superclass.localized_file_fields.dup if self.superclass.respond_to?(:localized_file_fields) && self.superclass.localized_file_fields.present?
         end
 
         # We just pass here once, when the instance.class class is loaded
@@ -110,3 +110,4 @@ module LocalizedFiles
     end
   end
 end
+
