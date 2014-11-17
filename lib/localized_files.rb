@@ -37,7 +37,7 @@ module LocalizedFiles
 
         # if self.localized_file_fields.nil?
           # self.localized_file_fields = self.superclass.localized_file_fields.dup if self.superclass.respond_to?(:localized_file_fields) && self.superclass.localized_file_fields.present?
-        end
+        # end
 
         # We just pass here once, when the instance.class class is loaded
         # Here comes the new option !
