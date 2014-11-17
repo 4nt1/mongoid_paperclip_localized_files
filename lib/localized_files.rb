@@ -10,7 +10,7 @@ end
 module LocalizedFiles
   extend ActiveSupport::Concern
   included do
-    @localized_file_fields = []
+    # @localized_file_fields = []
     field :localized_files,     type: Hash,   default: {}
   end
 
@@ -29,20 +29,20 @@ module LocalizedFiles
     Mongoid::Paperclip::ClassMethods.module_eval do
 
       # add accessor on the class
-      attr_accessor :localized_file_fields
+      # attr_accessor :localized_file_fields
       # rename the :has_mongoid _attached_file method sur we can add features
       alias_method :has_mongoid_attached_file_original, :has_mongoid_attached_file
 
       def has_mongoid_attached_file(field, options={})
 
-        if self.localized_file_fields.nil?
-          self.localized_file_fields = self.superclass.localized_file_fields.dup if self.superclass.respond_to?(:localized_file_fields) && self.superclass.localized_file_fields.present?
+        # if self.localized_file_fields.nil?
+          # self.localized_file_fields = self.superclass.localized_file_fields.dup if self.superclass.respond_to?(:localized_file_fields) && self.superclass.localized_file_fields.present?
         end
 
         # We just pass here once, when the instance.class class is loaded
         # Here comes the new option !
         if options.try(:[], :localize) == true
-          localized_file_fields.push(field) if !localized_file_fields.include?(field)
+          # localized_file_fields.push(field) if !localized_file_fields.include?(field)
           self.class_eval do
             # we are in the instance.class class
 
