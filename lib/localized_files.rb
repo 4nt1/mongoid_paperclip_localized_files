@@ -20,18 +20,18 @@ module LocalizedFiles
     def define_mongoid_method(field, locale, options={})
       # we're in the instance
       # define the method on the class if not defined
-      self.class_eval do
-        # we're in the instance.class class
-        has_mongoid_attached_file_original("#{field}_#{locale}".to_sym)
-      end if !self.respond_to?("#{field}_#{locale}".to_sym)
-
-
-      # field_locale = "#{field}_#{locale}"
       # self.class_eval do
       #   # we're in the instance.class class
-      #   has_mongoid_attached_file_original(field_locale.to_sym)
-      # end if !self.respond_to?(field_locale.to_sym)
-      # field_locale = nil
+      #   has_mongoid_attached_file_original("#{field}_#{locale}".to_sym)
+      # end if !self.respond_to?("#{field}_#{locale}".to_sym)
+
+
+      field_locale = "#{field}_#{locale}"
+      self.class_eval do
+        # we're in the instance.class class
+        has_mongoid_attached_file_original(field_locale.to_sym)
+      end if !self.respond_to?(field_locale.to_sym)
+      field_locale = nil
     end
 
     Mongoid::Paperclip::ClassMethods.module_eval do
@@ -64,6 +64,7 @@ module LocalizedFiles
             # end
 
             def update_localized_files_hash(field, locale, presence)
+
               locale = locale.to_sym
               self.localized_files["#{field}"] = [] if self.localized_files["#{field}"].blank?
               # adding a file
@@ -76,38 +77,43 @@ module LocalizedFiles
             end
 
 
+            field_locale = "#{field}_#{locale}"
+            field_locale_equal =  "#{field}_#{locale}="
+            field_equal = "#{field}="
+
 
             # define getter
             define_method(field) do |locale=I18n.locale|
               define_mongoid_method(field, locale, options)
-              self.send("#{field}_#{locale}".to_sym)
+              self.send(field_locale.to_sym)
             end
 
             # define setter
-            define_method("#{field}=") do |file|
+            define_method(field_equal) do |file|
               locale = I18n.locale
               define_mongoid_method(field, locale, options)
-              self.send("#{field}_#{locale}=".to_sym, file)
-              presence = self.send("#{field}_#{locale}").present?
+              self.send(field_locale_equal.to_sym, file)
+              presence = self.send(field_locale).present?
               update_localized_files_hash(field, locale, presence)
               file
             end
+            field_locale = field_locale_equal = field_equal = nil
 
-            # define setter helper
-            define_method("#{field}_translations=") do |hashed_files|
-              hashed_files.each do |locale, file|
-                define_mongoid_method(field, locale, options)
-                self.send("#{field}_#{locale}=".to_sym, file)
-                presence = self.send("#{field}_#{locale}").present?
-                update_localized_files_hash(field, locale, presence)
-                self.localized_files
-              end
-            end
+            # # define setter helper
+            # define_method("#{field}_translations=") do |hashed_files|
+            #   hashed_files.each do |locale, file|
+            #     define_mongoid_method(field, locale, options)
+            #     self.send("#{field}_#{locale}=".to_sym, file)
+            #     presence = self.send(field_locale).present?
+            #     update_localized_files_hash(field, locale, presence)
+            #     self.localized_files
+            #   end
+            # end
 
-            # define getter helper
-            define_method("#{field}_translations") do
-              self.localized_files["#{field}"]
-            end
+            # # define getter helper
+            # define_method("#{field}_translations") do
+            #   self.localized_files["#{field}"]
+            # end
 
           end
         else
