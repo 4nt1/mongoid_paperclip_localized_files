@@ -1,5 +1,5 @@
 # encoding: utf-8
-# require "localized_files/version"
+require "localized_files/version"
 begin
   require "paperclip"
   require "mongoid_paperclip"
@@ -24,6 +24,14 @@ module LocalizedFiles
         # we're in the instance.class class
         has_mongoid_attached_file_original("#{field}_#{locale}".to_sym)
       end if !self.respond_to?("#{field}_#{locale}".to_sym)
+
+
+      # field_locale = "#{field}_#{locale}"
+      # self.class_eval do
+      #   # we're in the instance.class class
+      #   has_mongoid_attached_file_original(field_locale.to_sym)
+      # end if !self.respond_to?(field_locale.to_sym)
+      # field_locale = nil
     end
 
     Mongoid::Paperclip::ClassMethods.module_eval do
@@ -47,13 +55,13 @@ module LocalizedFiles
             # we are in the instance.class class
 
             # define method on instantiation
-            after_find do |that|
-              that.localized_files.each do |field, locales|
-                locales.each do |locale|
-                  define_mongoid_method(field, locale)
-                end
-              end
-            end
+            # after_find do |that|
+            #   that.localized_files.each do |field, locales|
+            #     locales.each do |locale|
+            #       define_mongoid_method(field, locale)
+            #     end
+            #   end
+            # end
 
             def update_localized_files_hash(field, locale, presence)
               locale = locale.to_sym
