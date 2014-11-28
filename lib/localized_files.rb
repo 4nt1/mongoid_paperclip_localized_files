@@ -19,29 +19,16 @@ module LocalizedFiles
     def define_mongoid_method(field, locale, options={})
       # we're in the instance
       # define the method on the class if not defined
-      # debugger
       self.class.has_mongoid_attached_file_original("#{field}_#{locale}".to_sym) if !respond_to?("#{field}_#{locale}".to_sym)
-
-
-      # field_locale = "#{field}_#{locale}"
-      # self.class_eval do
-      #   # we're in the instance.class class
-      #   has_mongoid_attached_file_original(field_locale.to_sym)
-      # end if !self.respond_to?(field_locale.to_sym)
-      # field_locale = nil
     end
 
     Mongoid::Paperclip::ClassMethods.module_eval do
-
-      # add accessor on the class
-      # attr_accessor :localized_file_fields
       # rename the :has_mongoid _attached_file method sur we can add features
       alias_method :has_mongoid_attached_file_original, :has_mongoid_attached_file
 
       def define_instance_methods(field, options)
 
         define_method "update_localized_files_hash" do |field, locale, presence|
-
           locale = locale.to_sym
           self.localized_files["#{field}"] = [] if self.localized_files["#{field}"].blank?
           # adding a file
@@ -52,7 +39,6 @@ module LocalizedFiles
             self.localized_files["#{field}"].delete(locale) if self.localized_files["#{field}"].include?(locale)
           end
         end
-
 
         # define getter
         define_method(field) do |locale=I18n.locale|
@@ -88,17 +74,11 @@ module LocalizedFiles
       end
 
       def has_mongoid_attached_file(field, options={})
-
-        # if self.localized_file_fields.nil?
-          # self.localized_file_fields = self.superclass.localized_file_fields.dup if self.superclass.respond_to?(:localized_file_fields) && self.superclass.localized_file_fields.present?
-        # end
-
         # We just pass here once, when the instance.class class is loaded
         # Here comes the new option !
         if options.try(:[], :localize) == true
           # localized_file_fields.push(field) if !localized_file_fields.include?(field)
           self.class_eval do
-            puts "in class eval in #{self}"
             define_instance_methods(field, options)
           end
         else
